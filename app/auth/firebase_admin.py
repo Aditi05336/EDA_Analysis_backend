@@ -12,17 +12,19 @@ _firebase_initialized = False
 
 
 def init_firebase_admin():
-    """Initialize Firebase Admin SDK with certificate or fallback project configuration."""
+    """Initialize Firebase Admin SDK with certificate or fallback project configuration from env."""
     global _firebase_initialized
     if firebase_admin._apps:
         _firebase_initialized = True
         return firebase_admin.get_app()
 
     service_account_path = Config.FIREBASE_SERVICE_ACCOUNT_PATH
-    if not os.path.isabs(service_account_path):
+    if service_account_path and not os.path.isabs(service_account_path):
         service_account_path = os.path.join(Config.BASE_DIR, service_account_path)
 
-    if os.path.exists(service_account_path):
+    project_id = os.getenv("FIREBASE_PROJECT_ID")
+
+    if service_account_path and os.path.exists(service_account_path):
         try:
             with open(service_account_path, "r", encoding="utf-8") as f:
                 cred_dict = json.load(f)
@@ -37,11 +39,13 @@ def init_firebase_admin():
             return app
         except Exception as e:
             logger.warning(f"Certificate init warning ({e}). Initializing Firebase Admin app with project ID.")
-            app = firebase_admin.initialize_app(options={"projectId": "edaworkspace-fb3fa"})
+            opts = {"projectId": project_id} if project_id else {}
+            app = firebase_admin.initialize_app(options=opts)
             _firebase_initialized = True
             return app
     else:
-        app = firebase_admin.initialize_app(options={"projectId": "edaworkspace-fb3fa"})
+        opts = {"projectId": project_id} if project_id else {}
+        app = firebase_admin.initialize_app(options=opts)
         _firebase_initialized = True
         return app
 

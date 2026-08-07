@@ -13,19 +13,13 @@ class Config:
     CHARTS_FOLDER = os.path.join(BASE_DIR, "app", "static", "charts")
 
     # Neon Database URL
-    NEON_DATABASE_URL = os.getenv(
-        "NEON_DATABASE_URL",
-        "postgresql://neondb_owner:npg_rmcI0h1DFeTu@ep-empty-silence-ay4jsx6h.c-5.us-east-2.aws.neon.tech/neondb?sslmode=require",
-    )
+    NEON_DATABASE_URL = os.getenv("NEON_DATABASE_URL")
 
     # Firebase Service Account Path
-    FIREBASE_SERVICE_ACCOUNT_PATH = os.getenv(
-        "FIREBASE_SERVICE_ACCOUNT_PATH",
-        os.path.join(BASE_DIR, "serviceAccountKey.json"),
-    )
+    FIREBASE_SERVICE_ACCOUNT_PATH = os.getenv("FIREBASE_SERVICE_ACCOUNT_PATH")
 
     # Secret key
-    SECRET_KEY = os.getenv("SECRET_KEY", "eda_secret_super_key_2026")
+    SECRET_KEY = os.getenv("SECRET_KEY")
 
     # Only CSV accepted in this phase.
     ALLOWED_EXTENSIONS = {"csv"}
